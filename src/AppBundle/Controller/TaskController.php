@@ -88,7 +88,7 @@ class TaskController extends Controller
     {
         $user = $this->getUser();
 
-        if ($user !== $task->getAuthor()) {
+        if ($user !== $task->getAuthor() && !in_array("ROLE_ADMIN", $user->getRoles())) {
             $this->addFlash("error", "Vous n'êtes pas autorisé à supprimer cette tâche.");
         } else {
             $em = $this->getDoctrine()->getManager();

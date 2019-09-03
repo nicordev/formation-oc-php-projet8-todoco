@@ -39,6 +39,15 @@ class User implements UserInterface
      */
     private $email;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\Task",
+     *     mappedBy="author",
+     *     cascade={"persist"}
+     * )
+     */
+    private $tasks;
+
     public function getId()
     {
         return $this->id;
@@ -52,6 +61,8 @@ class User implements UserInterface
     public function setUsername($username)
     {
         $this->username = $username;
+
+        return $this;
     }
 
     public function getSalt()
@@ -67,6 +78,8 @@ class User implements UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
     }
 
     public function getEmail()
@@ -77,6 +90,8 @@ class User implements UserInterface
     public function setEmail($email)
     {
         $this->email = $email;
+
+        return $this;
     }
 
     public function getRoles()

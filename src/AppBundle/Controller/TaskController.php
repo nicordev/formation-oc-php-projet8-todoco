@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
+use AppBundle\Security\TaskVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,6 +51,8 @@ class TaskController extends Controller
      */
     public function editAction(Task $task, Request $request)
     {
+        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
+
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -86,17 +89,13 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
-        $user = $this->getUser();
+        $this->denyAccessUnlessGranted(TaskVoter::DELETE, $task);
 
-        if ($user !== $task->getAuthor() && !in_array("ROLE_ADMIN", $user->getRoles())) {
-            $this->addFlash("error", "Vous n'êtes pas autorisé à supprimer cette tâche.");
-        } else {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($task);
-            $em->flush();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($task);
+        $entityManager->flush();
 
-            $this->addFlash('success', 'La tâche a bien été supprimée.');
-        }
+        $this->addFlash('success', 'La tâche a bien été supprimée.');
 
         return $this->redirectToRoute('task_list');
     }

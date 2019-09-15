@@ -63,11 +63,30 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Then I am redirected to the homepage
+     * @Then I am redirected to the homepage fully authenticated
      */
-    public function iAmRedirectedToTheHomepage()
+    public function iAmRedirectedToTheHomepageFullyAuthenticated()
     {
         $this->checkHomepage();
+    }
+
+    /**
+     * @When I click on the link to logout
+     */
+    public function iClickOnTheLinkToLogout()
+    {
+        $logoutButton = $this->currentPage->findLink("Se déconnecter");
+        $logoutButton->click();
+    }
+
+    /**
+     * @Then I am redirected to the login page as an anonymous user
+     */
+    public function iAmRedirectedToTheLoginPageAsAnAnonymousUser()
+    {
+        Assert::assertEquals(200, $this->session->getStatusCode());
+        $this->testCurrentUri('/login');
+        Assert::assertNull($this->currentPage->findLink("Se déconnecter"));
     }
 
     // tasks.feature

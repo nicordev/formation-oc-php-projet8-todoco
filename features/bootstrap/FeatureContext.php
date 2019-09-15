@@ -41,101 +41,75 @@ class FeatureContext implements Context
         $this->session->start();
     }
 
-    // login.feature
-
-    /**
-     * @Given I am on the login page
-     */
-    public function iAmOnTheLoginPage()
-    {
-        $this->session->visit(self::URL . '/');
-        Assert::assertEquals(200, $this->session->getStatusCode());
-        $this->testCurrentUri('/login');
-        $this->goToLoginPage();
-    }
-
-    /**
-     * @When I fill the login form and submit it
-     */
-    public function iFillTheLoginFormAndSubmitIt()
-    {
-        $this->fillLoginFormAndSubmit();
-    }
-
-    /**
-     * @Then I am redirected to the homepage fully authenticated
-     */
-    public function iAmRedirectedToTheHomepageFullyAuthenticated()
-    {
-        $this->checkHomepage();
-    }
-
-    /**
-     * @When I click on the link to logout
-     */
-    public function iClickOnTheLinkToLogout()
-    {
-        $logoutButton = $this->currentPage->findLink("Se déconnecter");
-        $logoutButton->click();
-    }
-
-    /**
-     * @Then I am redirected to the login page as an anonymous user
-     */
-    public function iAmRedirectedToTheLoginPageAsAnAnonymousUser()
-    {
-        Assert::assertEquals(200, $this->session->getStatusCode());
-        $this->testCurrentUri('/login');
-        Assert::assertNull($this->currentPage->findLink("Se déconnecter"));
-    }
-
-    // tasks.feature
+    // Login
 
     /**
      * @Given I am authenticated
      */
     public function iAmAuthenticated()
     {
-        $this->loginThroughLoginPage();
+        $this->iAmOn("/login");
+        $this->iFillInWith("username", self::TEST_USERNAME);
+        $this->iFillInWith("password", self::TEST_PASSWORD);
+        $this->iPress("Se connecter");
+    }
+
+    // Navigation
+
+    /**
+     * @Given I am on :uri
+     */
+    public function iAmOn($uri)
+    {
+        $this->session->visit(self::URL . $uri);
+        $this->currentPage = $this->session->getPage();
     }
 
     /**
-     * @Given I am on the homepage
+     * @When I follow :link
      */
-    public function iAmOnTheHomepage()
+    public function iFollow($link)
     {
-        $this->checkHomepage();
-    }
-
-    /**
-     * @When I click on the link to show the task list
-     */
-    public function iClickOnTheLinkToShowTheTaskList()
-    {
-        $taskListLink = $this->currentPage->findLink("Consulter la liste des tâches à faire");
+        $taskListLink = $this->currentPage->findLink($link);
         $taskListLink->click();
-        Assert::assertEquals(200, $this->session->getStatusCode());
     }
 
+    // Actions
+
     /**
-     * @Then I am redirected to the task list
+     * @Given I press :button
      */
-    public function iAmRedirectedToTheTaskList()
+    public function iPress($button)
     {
-        $this->testCurrentUri("/tasks");
-        Assert::assertTrue($this->currentPage->hasLink("Créer une tâche"));
-        $taskCards = $this->currentPage->findAll("css", "div.task-card");
-        Assert::assertNotEmpty($taskCards);
+        Assert::assertTrue($this->currentPage->hasButton($button));
+        $button = $this->currentPage->findButton($button);
+        $button->click();
     }
 
-    // Private
+    /**
+     * @When I fill in :input with :value
+     */
+    public function iFillInWith($input, $value)
+    {
+        Assert::assertTrue($this->currentPage->hasField($input));
+        $field = $this->currentPage->findField($input);
+        $field->setValue($value);
+    }
+
+    // Assertions
 
     /**
-     * Check if the given uri is the current one
-     *
-     * @param string $uri
+     * @Then the response status code should be :code
      */
-    private function testCurrentUri(string $uri)
+    public function theResponseStatusCodeShouldBe($code)
+    {
+        Assert::assertEquals($code, $this->session->getStatusCode());
+    }
+
+    /**
+     * @Then I should be on :uri
+     */
+    public function iShouldBeOn($uri)
     {
         $url = $this->session->getCurrentUrl();
         $escapedUri = str_replace('/', '\\/', $uri);
@@ -143,39 +117,32 @@ class FeatureContext implements Context
         Assert::assertEquals(1, preg_match($regex, $url));
     }
 
-    private function loginThroughLoginPage()
+    /**
+     * @Given I should see a :element :content
+     */
+    public function iShouldSeeA($element, $value)
     {
-        $this->goToLoginPage();
-        $this->fillLoginFormAndSubmit();
+        Assert::assertTrue($this->currentPage->has("named_exact", [$element, $value]));
     }
 
-    private function goToLoginPage()
+    /**
+     * @Given I should see every tasks
+     */
+    public function iShouldSeeEveryTasks()
     {
-        $this->session->visit(self::URL . "/login");
-        Assert::assertEquals(200, $this->session->getStatusCode());
-        $this->currentPage = $this->session->getPage();
-        Assert::assertTrue($this->currentPage->hasButton("Se connecter"));
-        Assert::assertTrue($this->currentPage->hasField("username"));
-        Assert::assertTrue($this->currentPage->hasField("password"));
+        $taskCards = $this->currentPage->findAll("css", "div.task-card");
+        Assert::assertNotEmpty($taskCards);
     }
 
-    private function fillLoginFormAndSubmit()
+    /**
+     * @Given I should see the task :title with its content :content
+     */
+    public function iShouldSeeTheTaskWithItsContent($title, $content)
     {
-        $usernameInput = $this->currentPage->findField("username");
-        $usernameInput->setValue(self::TEST_USERNAME);
-        $passwordInput = $this->currentPage->findField("password");
-        $passwordInput->setValue(self::TEST_PASSWORD);
-        $submitButton = $this->currentPage->findButton("Se connecter");
-        $submitButton->click();
-    }
-
-    private function checkHomepage()
-    {
-        Assert::assertEquals(200, $this->session->getStatusCode());
-        $this->testCurrentUri('/');
-        Assert::assertTrue($this->currentPage->hasLink("Se déconnecter"));
-        Assert::assertTrue($this->currentPage->hasLink("Créer une nouvelle tâche"));
-        Assert::assertTrue($this->currentPage->hasLink("Consulter la liste des tâches à faire"));
-        Assert::assertTrue($this->currentPage->hasLink("Consulter la liste des tâches terminées"));
+        Assert::assertTrue($this->currentPage->hasLink($title));
+        $title = $this->currentPage->find("named_exact", ["content", $title]);
+        $content = $this->currentPage->find("named_exact", ["content", $content]);
+        Assert::assertNotNull($title);
+        Assert::assertNotNull($content);
     }
 }

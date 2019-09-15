@@ -3,9 +3,38 @@ Feature: Tasks
   As a fully authenticated user
   I need to see all created tasks on a page and manage my tasks
 
-  Scenario: Show the task list
+  Scenario: Check homepage
     Given I am authenticated
-    And I am on the homepage
-    When I click on the link to show the task list
-    Then I am redirected to the task list
+    And I am on "/"
+    Then I should see a "link" "Se déconnecter"
+    And I should see a "link" "Créer une nouvelle tâche"
+    And I should see a "link" "Consulter la liste des tâches à faire"
+    And I should see a "link" "Consulter la liste des tâches terminées"
 
+  Scenario: Show the task list from the homepage
+    Given I am authenticated
+    And I am on "/"
+    When I follow "Consulter la liste des tâches à faire"
+    Then I should be on "/tasks"
+    And I should see every tasks
+
+  Scenario: Reach the task creation page from the homepage
+    Given I am authenticated
+    And I am on "/"
+    When I follow "Créer une nouvelle tâche"
+    Then I should be on "/tasks/create"
+
+  Scenario: Reach the task creation page from the task list
+    Given I am authenticated
+    And I am on "/tasks"
+    When I follow "Créer une tâche"
+    Then I should be on "/tasks/create"
+
+  Scenario: Create a new task
+    Given I am authenticated
+    And I am on "/tasks/create"
+    When I fill in "task_title" with "New test task title"
+    And I fill in "task_content" with "New test task content"
+    And I press "Ajouter"
+    Then I should be on "/tasks"
+    And I should see the task "New test task title" with its content "New test task content"

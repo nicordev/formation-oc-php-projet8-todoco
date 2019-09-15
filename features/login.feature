@@ -4,6 +4,6 @@ Feature: Login
   I need to login
 
   Scenario: Login
-    Given the anonymous user is on the login page
-    When the user fill the login form and submit it
-    Then the user is redirected to the homepage
+    Given I am on the login page
+    When I fill the login form and submit it
+    Then I am redirected to the homepage

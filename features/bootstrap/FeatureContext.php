@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../../vendor/bin/.phpunit/phpunit-7.4/vendor/autoload.php";
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Session;
 use PHPUnit\Framework\Assert;
@@ -21,6 +22,8 @@ class FeatureContext implements Context
      */
     private $currentPage;
 
+    //    public const URL = "http://127.0.0.1:8000"; // Not working with Symfony server: cURL error 60: SSL certificate problem: self signed certificate in certificate chain
+    public const URL = "http://todoco.local"; // Works with wamp virtual host
     public const TEST_USERNAME = "bob";
     public const TEST_PASSWORD = "mdp";
 
@@ -38,44 +41,72 @@ class FeatureContext implements Context
         $this->session->start();
     }
 
+    // login.feature
+
     /**
-     * @Given the anonymous user is on the login page
+     * @Given I am on the login page
      */
-    public function theAnonymousUserIsOnTheLoginPage()
+    public function iAmOnTheLoginPage()
     {
-//        $this->session->visit("http://127.0.0.1:8000/login"); // Not working with Symfony server: cURL error 60: SSL certificate problem: self signed certificate in certificate chain
-        $this->session->visit("http://todoco.local/login"); // Works with wamp virtual host
-        Assert::equalTo(200, $this->session->getStatusCode());
-        $this->currentPage = $this->session->getPage();
-        Assert::assertTrue($this->currentPage->hasButton("Se connecter"));
-        Assert::assertTrue($this->currentPage->hasField("username"));
-        Assert::assertTrue($this->currentPage->hasField("password"));
+        $this->session->visit(self::URL . '/');
+        Assert::assertEquals(200, $this->session->getStatusCode());
+        $this->testCurrentUri('/login');
+        $this->goToLoginPage();
     }
 
     /**
-     * @When the user fill the login form and submit it
+     * @When I fill the login form and submit it
      */
-    public function theUserFillTheLoginFormAndSubmitIt()
+    public function iFillTheLoginFormAndSubmitIt()
     {
-        $usernameInput = $this->currentPage->findField("username");
-        $usernameInput->setValue(self::TEST_USERNAME);
-        $passwordInput = $this->currentPage->findField("password");
-        $passwordInput->setValue(self::TEST_PASSWORD);
-        $submitButton = $this->currentPage->findButton("Se connecter");
-        $submitButton->click();
+        $this->fillLoginFormAndSubmit();
     }
 
     /**
-     * @Then the user is redirected to the homepage
+     * @Then I am redirected to the homepage
      */
-    public function theUserIsRedirectedToTheHomepage()
+    public function iAmRedirectedToTheHomepage()
     {
-        Assert::equalTo(200, $this->session->getStatusCode());
-        $this->testCurrentUri('/');
-        Assert::assertTrue($this->currentPage->hasLink("Se déconnecter"));
-        Assert::assertTrue($this->currentPage->hasLink("Créer une nouvelle tâche"));
-        Assert::assertTrue($this->currentPage->hasLink("Consulter la liste des tâches à faire"));
-        Assert::assertTrue($this->currentPage->hasLink("Consulter la liste des tâches terminées"));
+        $this->checkHomepage();
+    }
+
+    // tasks.feature
+
+    /**
+     * @Given I am authenticated
+     */
+    public function iAmAuthenticated()
+    {
+        $this->loginThroughLoginPage();
+    }
+
+    /**
+     * @Given I am on the homepage
+     */
+    public function iAmOnTheHomepage()
+    {
+        $this->checkHomepage();
+    }
+
+    /**
+     * @When I click on the link to show the task list
+     */
+    public function iClickOnTheLinkToShowTheTaskList()
+    {
+        $taskListLink = $this->currentPage->findLink("Consulter la liste des tâches à faire");
+        $taskListLink->click();
+        Assert::assertEquals(200, $this->session->getStatusCode());
+    }
+
+    /**
+     * @Then I am redirected to the task list
+     */
+    public function iAmRedirectedToTheTaskList()
+    {
+        $this->testCurrentUri("/tasks");
+        Assert::assertTrue($this->currentPage->hasLink("Créer une tâche"));
+        $taskCards = $this->currentPage->findAll("css", "div.task-card");
+        Assert::assertNotEmpty($taskCards);
     }
 
     // Private
@@ -87,6 +118,45 @@ class FeatureContext implements Context
      */
     private function testCurrentUri(string $uri)
     {
-        Assert::assertEquals(1, preg_match('#^https?:\/\/(www\.)?.+\.[a-z]{1,6}' . $uri . '$#', $this->session->getCurrentUrl()));
+        $url = $this->session->getCurrentUrl();
+        $escapedUri = str_replace('/', '\\/', $uri);
+        $regex = '#^https?:\/\/(www\.)?.+\.[a-z]{1,6}' . $escapedUri . '$#';
+        Assert::assertEquals(1, preg_match($regex, $url));
+    }
+
+    private function loginThroughLoginPage()
+    {
+        $this->goToLoginPage();
+        $this->fillLoginFormAndSubmit();
+    }
+
+    private function goToLoginPage()
+    {
+        $this->session->visit(self::URL . "/login");
+        Assert::assertEquals(200, $this->session->getStatusCode());
+        $this->currentPage = $this->session->getPage();
+        Assert::assertTrue($this->currentPage->hasButton("Se connecter"));
+        Assert::assertTrue($this->currentPage->hasField("username"));
+        Assert::assertTrue($this->currentPage->hasField("password"));
+    }
+
+    private function fillLoginFormAndSubmit()
+    {
+        $usernameInput = $this->currentPage->findField("username");
+        $usernameInput->setValue(self::TEST_USERNAME);
+        $passwordInput = $this->currentPage->findField("password");
+        $passwordInput->setValue(self::TEST_PASSWORD);
+        $submitButton = $this->currentPage->findButton("Se connecter");
+        $submitButton->click();
+    }
+
+    private function checkHomepage()
+    {
+        Assert::assertEquals(200, $this->session->getStatusCode());
+        $this->testCurrentUri('/');
+        Assert::assertTrue($this->currentPage->hasLink("Se déconnecter"));
+        Assert::assertTrue($this->currentPage->hasLink("Créer une nouvelle tâche"));
+        Assert::assertTrue($this->currentPage->hasLink("Consulter la liste des tâches à faire"));
+        Assert::assertTrue($this->currentPage->hasLink("Consulter la liste des tâches terminées"));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "/../../vendor/bin/.phpunit/phpunit-7.4/vendor/autoload.php";
+//require_once __DIR__ . "/../../vendor/bin/.phpunit/phpunit-7.4/vendor/autoload.php";
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;

@@ -13,7 +13,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "PHPUnit\\Framework\\": "vendor/bin/.phpunit-7.4/src/Framework/"
         }
     },
     "require": {

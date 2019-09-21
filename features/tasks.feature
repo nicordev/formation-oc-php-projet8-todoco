@@ -38,3 +38,13 @@ Feature: Tasks
     And I press "Ajouter"
     Then I should be on "/tasks"
     And I should see the task "New test task title" with its content "New test task content"
+
+  Scenario: Edit an existing task
+    Given I am authenticated
+    And I am on "/tasks"
+    And I follow "New test task title"
+    When I fill in "task_title" with "New test task title - modified"
+    And I fill in "task_content" with "New test task content - modified"
+    And I press "Modifier"
+    Then I should be on "/tasks"
+    And I should see the task "New test task title - modified" with its content "New test task content - modified"

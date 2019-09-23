@@ -1,3 +1,4 @@
+@security
 Feature: Access control
   In order to see the task list and manage my tasks
   As an anonymous user

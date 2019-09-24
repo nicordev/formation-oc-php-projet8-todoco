@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class RoleHierarchyReader
 {
-    public static function read(RoleHierarchyInterface $roleHierarchy)
+    public static function fetchRoleList(RoleHierarchyInterface $roleHierarchy)
     {
         $rolesMap = ObjectAccessor::getPrivateProperty($roleHierarchy, "map");
         $adminRole = array_key_first($rolesMap);

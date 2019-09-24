@@ -21,7 +21,7 @@ class UserType extends AbstractType
 
     public function __construct(RoleHierarchyInterface $roleHierarchy)
     {
-        $this->roles = RoleHierarchyReader::read($roleHierarchy);
+        $this->roles = RoleHierarchyReader::fetchRoleList($roleHierarchy);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -19,6 +19,5 @@ services:
 
     AppBundle\Security\TaskVoter:
         class: 'AppBundle\Security\TaskVoter'
-        autowire: true
         tags:
           ['security.voter']

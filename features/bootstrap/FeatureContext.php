@@ -2,15 +2,13 @@
 
 require_once __DIR__ . "/../../vendor/bin/.phpunit/phpunit-7.4/vendor/autoload.php";
 
-use AppBundle\Entity\Task;
-use AppBundle\Entity\User;
+use App\Entity\Task;
+use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Session;
 use PHPUnit\Framework\Assert;
-use Tests\TestHelper\DatabaseHandler;
-use Tests\TestHelper\DoctrineHandler;
 
 /**
  * Defines application features from the specific context.
@@ -150,91 +148,5 @@ class FeatureContext implements Context
         $content = $this->currentPage->find("named_exact", ["content", $content]);
         Assert::assertNotNull($title);
         Assert::assertNotNull($content);
-    }
-
-    /**
-     * @Given A task called :title which its content is :content created by :author exists
-     */
-    public function aTaskCalledWhichItsContentIsCreatedByExists($title, $content, $author)
-    {
-        // TODO: read app/config/parameters.yml with yaml_parse_file()
-
-        $db = DatabaseHandler::getInstance()->connect(
-            "ocp8",
-            "localhost",
-            "root",
-            ""
-        );
-        $task = $db->find(self::TASK_TABLE, ["title" => $title], Task::class);
-
-        if ($task) {
-            $db->delete(self::TASK_TABLE, "title = '$title'");
-        }
-
-        $task = new Task();
-        $task->setTitle($title);
-        $task->setContent($content);
-        $task->setCreatedAt(new DateTime("1973-01-01 00:00:01"));
-
-        if (!empty($author) && $author !== "anonymous") {
-            $taskAuthor = $db->find(self::USER_TABLE, ["username" => $author], User::class);
-
-            if (!$taskAuthor) {
-                $taskAuthor = new User();
-                $taskAuthor->setUsername($author);
-                $taskAuthor->setEmail("$author@test.com");
-                $taskAuthor->setPassword("testpwd");
-                $db->insertEntity(self::USER_TABLE, $taskAuthor);
-//                $db->insertARow(self::TASK_TABLE, [
-//                    "username" => $author,
-//                    "email" => "$author@test.com",
-//                    "password" => "testpwd"
-//                ]);
-                $taskAuthor = $db->find(self::USER_TABLE, ["username" => $author], User::class);
-            }
-
-            $task->setAuthor($taskAuthor);
-        }
-
-        $db->insertEntity(self::TASK_TABLE, $task);
-
-//        $manager = DoctrineHandler::getInstance()
-//            ->makeEntityManager(
-//                __DIR__ . "/../../src/Entity",
-//                "ocp8"
-//            )
-//            ->getEntityManager()
-//        ;
-//
-//        $taskRepository = $manager->getRepository(Task::class);
-//        $task = $taskRepository->findOneBy(["title" => $title]);
-//
-//        if ($task) {
-//            $manager->remove($task);
-//            $manager->flush();
-//        }
-//
-//        $task = new Task();
-//        $task->setTitle($title);
-//        $task->setContent($content);
-//        $task->setCreatedAt(new DateTime("1973-01-01 00:00:01"));
-//
-//        if (!empty($author) && $author !== "anonymous") {
-//            $userRepository = $manager->getRepository(User::class);
-//            $taskAuthor = $userRepository->findOneBy(["username" => $author]);
-//
-//            if (is_null($taskAuthor)) {
-//                $taskAuthor = new User();
-//                $taskAuthor->setUsername($author);
-//                $taskAuthor->setEmail("$author@test.com");
-//                $taskAuthor->setPassword("testpwd");
-//                $manager->persist($taskAuthor);
-//            }
-//
-//            $task->setAuthor($taskAuthor);
-//        }
-//
-//        $manager->persist($task);
-//        $manager->flush();
     }
 }

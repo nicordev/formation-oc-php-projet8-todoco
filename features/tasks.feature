@@ -45,14 +45,14 @@ Feature: Tasks
     Then I should be on "/tasks"
     And I should see the task "New test task title" with its content "New test task content"
 
-  @edit
-  Scenario: Edit an existing task
-    Given A task called "Test task title" which its content is "Test task content" created by "bob" exists
-    And I am authenticated
-    And I am on "/tasks"
-    And I follow "Test task title"
-    When I fill in "task_title" with "Test task title - modified"
-    And I fill in "task_content" with "Test task content - modified"
-    And I press "Modifier"
-    Then I should be on "/tasks"
-    And I should see the task "Test task title - modified" with its content "Test task content - modified"
+#  @edit
+#  Scenario: Edit an existing task
+#    Given A task called "Test task title" which its content is "Test task content" created by "bob" exists
+#    And I am authenticated
+#    And I am on "/tasks"
+#    And I follow "Test task title"
+#    When I fill in "task_title" with "Test task title - modified"
+#    And I fill in "task_content" with "Test task content - modified"
+#    And I press "Modifier"
+#    Then I should be on "/tasks"
+#    And I should see the task "Test task title - modified" with its content "Test task content - modified"

@@ -56,7 +56,8 @@
     "autoload-dev": {
         "psr-4": {
             "App\\Tests\\": "tests/",
-            "PHPUnit\\Framework\\": "vendor/bin/.phpunit-7.4/src/Framework/"
+            "PHPUnit\\Framework\\": "vendor/bin/.phpunit-7.4/src/Framework/",
+            "FeatureContext\\": "features/bootstrap/"
         }
     },
     "replace": {

@@ -18,20 +18,22 @@ Feature: Access control
 
   Scenario: Check login page
     Given I am on "/login"
-    Then I should see a "button" "Se connecter"
-    And I should see a "field" "username"
-    And I should see a "field" "password"
+    Then I should see a "button" named "Se connecter"
+    And I should see a "field" named "username"
+    And I should see a "field" named "password"
 
+  @login
   Scenario: Login
     Given I am on "/login"
     When I fill in "username" with "bob"
     And I fill in "password" with "mdp"
     And I press "Se connecter"
     Then I should be on "/"
-    And I should see a "link" "Se déconnecter"
+    And I should see a "link" named "Se déconnecter"
 
+  @logout
   Scenario: Logout
     Given I am authenticated
     When I follow "Se déconnecter"
     Then I should be on "/login"
-    And I should see a "button" "Se connecter"
+    And I should see a "button" named "Se connecter"

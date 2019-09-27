@@ -8,10 +8,10 @@ Feature: Tasks
   Scenario: Check homepage
     Given I am authenticated
     And I am on "/"
-    Then I should see a "link" "Se déconnecter"
-    And I should see a "link" "Créer une nouvelle tâche"
-    And I should see a "link" "Consulter la liste des tâches à faire"
-    And I should see a "link" "Consulter la liste des tâches terminées"
+    Then I should see a "link" named "Se déconnecter"
+    And I should see a "link" named "Créer une nouvelle tâche"
+    And I should see a "link" named "Consulter la liste des tâches à faire"
+    And I should see a "link" named "Consulter la liste des tâches terminées"
 
   @navigate
   Scenario: Show the task list from the homepage

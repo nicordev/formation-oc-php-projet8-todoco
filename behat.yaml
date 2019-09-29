@@ -5,6 +5,7 @@ default:
 #                - rdx\behatvars\BehatVariablesContext
 #                - Behat\MinkExtension\Context\MinkContext
                 - FeatureContext
+                - FixtureContext
                 - behatch:context:browser
                 - behatch:context:debug
                 - behatch:context:system

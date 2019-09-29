@@ -4,9 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
+use AppBundle\Security\TaskVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TaskController extends Controller
 {
@@ -29,6 +31,8 @@ class TaskController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $author = $this->getUser();
+            $task->setAuthor($author);
             $em = $this->getDoctrine()->getManager();
 
             $em->persist($task);
@@ -47,6 +51,8 @@ class TaskController extends Controller
      */
     public function editAction(Task $task, Request $request)
     {
+        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
+
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -83,9 +89,11 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
+        $this->denyAccessUnlessGranted(TaskVoter::DELETE, $task);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($task);
+        $entityManager->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 

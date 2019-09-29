@@ -40,6 +40,15 @@ class Task
      */
     private $isDone;
 
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="AppBundle\Entity\User",
+     *     inversedBy="tasks",
+     *     cascade={"persist"}
+     * )
+     */
+    private $author;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
@@ -59,6 +68,8 @@ class Task
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getTitle()
@@ -69,6 +80,8 @@ class Task
     public function setTitle($title)
     {
         $this->title = $title;
+
+        return $this;
     }
 
     public function getContent()
@@ -79,6 +92,8 @@ class Task
     public function setContent($content)
     {
         $this->content = $content;
+
+        return $this;
     }
 
     public function isDone()
@@ -89,5 +104,24 @@ class Task
     public function toggle($flag)
     {
         $this->isDone = $flag;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     * @return Task
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+
+        return $this;
     }
 }

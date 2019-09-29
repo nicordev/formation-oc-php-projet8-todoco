@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Helper\RoleHierarchyReader;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class UserType extends AbstractType
@@ -19,9 +19,11 @@ class UserType extends AbstractType
      */
     private $roles = [];
 
-    public function __construct(RoleHierarchyInterface $roleHierarchy)
+    public function __construct(RoleHierarchyInterface $roleHierarchy, string $roleAdmin)
     {
-        $this->roles = RoleHierarchyReader::fetchRoleList($roleHierarchy);
+        $roleMap = $roleHierarchy->getReachableRoles([new Role($roleAdmin)]);
+        $this->roles["Utilisateur"] = $roleMap[1]->getRole();
+        $this->roles["Administrateur"] = $roleAdmin;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

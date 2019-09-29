@@ -21,3 +21,8 @@ services:
         class: 'AppBundle\Security\TaskVoter'
         tags:
           ['security.voter']
+
+    AppBundle\Form\UserType:
+        class: 'AppBundle\Form\UserType'
+        arguments:
+            $roleAdmin: "ROLE_ADMIN"

@@ -9,8 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class UserType extends AbstractType
 {
@@ -19,11 +17,13 @@ class UserType extends AbstractType
      */
     private $roles = [];
 
-    public function __construct(RoleHierarchyInterface $roleHierarchy, string $roleAdmin)
+    public function __construct(array $securityRoleHierarchyRoles, array $translations)
     {
-        $roleMap = $roleHierarchy->getReachableRoles([new Role($roleAdmin)]);
-        $this->roles["Utilisateur"] = $roleMap[1]->getRole();
-        $this->roles["Administrateur"] = $roleAdmin;
+        if ([] !== $missingTranslations = array_diff(array_keys($securityRoleHierarchyRoles), array_keys($translations))) {
+            throw new \InvalidArgumentException("Missing translations: " . print_r($missingTranslations, true));
+        }
+
+        $this->roles = array_flip($translations);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

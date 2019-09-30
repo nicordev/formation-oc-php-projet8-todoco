@@ -25,7 +25,7 @@ services:
     AppBundle\Form\UserType:
         class: 'AppBundle\Form\UserType'
         arguments:
-            $roles: "%security.role_hierarchy.roles%"
+            $securityRoleHierarchyRoles: "%security.role_hierarchy.roles%"
             $translations:
                 ROLE_USER: "Utilisateur"
                 ROLE_ADMIN: "Administrateur"

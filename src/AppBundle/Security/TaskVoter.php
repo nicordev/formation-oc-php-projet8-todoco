@@ -6,12 +6,22 @@ namespace AppBundle\Security;
 use AppBundle\Entity\Task;
 use AppBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class TaskVoter extends Voter
 {
     public const EDIT = "task_edit";
     public const DELETE = "task_delete";
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
+    {
+        $this->authorizationChecker = $authorizationChecker;
+    }
 
     /**
      * Determines if the attribute and subject are supported by this voter.
@@ -49,7 +59,7 @@ class TaskVoter extends Voter
 
         if (in_array($attribute, [self::EDIT, self::DELETE])) {
             $task = $subject;
-            if ($user === $task->getAuthor() || in_array("ROLE_ADMIN", $user->getRoles())) {
+            if ($user === $task->getAuthor() || $this->authorizationChecker->isGranted("ROLE_ADMIN")) {
                 return true;
             }
         }

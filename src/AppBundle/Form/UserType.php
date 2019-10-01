@@ -17,11 +17,6 @@ class UserType extends AbstractType
         "Administrateur" => "ROLE_ADMIN"
     ];
 
-    /**
-     * @var array
-     */
-    private $translatedRoles = [];
-
     public function __construct(array $securityRoleHierarchyRoles)
     {
         $availableRoles = array_keys($securityRoleHierarchyRoles);

@@ -12,21 +12,23 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class UserType extends AbstractType
 {
+    public const ROLE_TRANSLATIONS = [
+        "Utilisateur" => "ROLE_USER",
+        "Administrateur" => "ROLE_ADMIN"
+    ];
+
     /**
      * @var array
      */
     private $translatedRoles = [];
 
-    public function __construct(array $securityRoleHierarchyRoles, array $translations)
+    public function __construct(array $securityRoleHierarchyRoles)
     {
         $availableRoles = array_keys($securityRoleHierarchyRoles);
-        $translatedRoles = array_keys($translations);
 
-        if ([] !== $missingTranslations = array_diff($availableRoles, $translatedRoles)) {
+        if ([] !== $missingTranslations = array_diff($availableRoles, self::ROLE_TRANSLATIONS)) {
             throw new \InvalidArgumentException("Missing translations: " . print_r($missingTranslations, true));
         }
-
-        $this->translatedRoles = $translations;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -43,7 +45,7 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
             ->add('roles', ChoiceType::class, [
                 'multiple' => true,
-                'choices' => array_flip($this->translatedRoles)
+                'choices' => self::ROLE_TRANSLATIONS
             ])
         ;
     }

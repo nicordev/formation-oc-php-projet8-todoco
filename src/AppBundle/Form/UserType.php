@@ -15,15 +15,18 @@ class UserType extends AbstractType
     /**
      * @var array
      */
-    private $roles = [];
+    private $translatedRoles = [];
 
     public function __construct(array $securityRoleHierarchyRoles, array $translations)
     {
-        if ([] !== $missingTranslations = array_diff(array_keys($securityRoleHierarchyRoles), array_keys($translations))) {
+        $availableRoles = array_keys($securityRoleHierarchyRoles);
+        $translatedRoles = array_keys($translations);
+
+        if ([] !== $missingTranslations = array_diff($availableRoles, $translatedRoles)) {
             throw new \InvalidArgumentException("Missing translations: " . print_r($missingTranslations, true));
         }
 
-        $this->roles = array_flip($translations);
+        $this->translatedRoles = $translations;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -40,7 +43,7 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
             ->add('roles', ChoiceType::class, [
                 'multiple' => true,
-                'choices' => $this->roles
+                'choices' => array_flip($this->translatedRoles)
             ])
         ;
     }

@@ -34,5 +34,6 @@ services:
         tags:
           ['security.voter']
 
-    security.role_hierachy:
-        alias: Symfony\Component\Security\Core\Role\RoleHierarchyInterface
+    App\Form\UserType:
+        arguments:
+            $securityRoleHierarchyRoles: "%security.role_hierarchy.roles%"

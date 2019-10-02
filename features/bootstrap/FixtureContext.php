@@ -1,19 +1,27 @@
 <?php
 
+use App\Entity\User;
 use App\Kernel;
 use Behat\Behat\Context\Context;
+use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
-class FixtureContext implements Context
+class FixtureContext extends KernelTestCase implements Context
 {
+    use RefreshDatabaseTrait;
+
+    static protected $kernel;
+
     /**
      * @BeforeSuite
      */
     public static function load()
     {
-        self::runCommand("php bin/console hautelook:fixtures:load");
+        self::bootKernel();
+//        self::runCommand("hautelook:fixtures:load");
     }
 
     protected static function runCommand(string $command, array $args = []): void

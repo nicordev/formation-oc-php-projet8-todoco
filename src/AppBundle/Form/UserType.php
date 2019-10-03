@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -11,6 +12,20 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class UserType extends AbstractType
 {
+    public const ROLE_TRANSLATIONS = [
+        "Utilisateur" => "ROLE_USER",
+        "Administrateur" => "ROLE_ADMIN"
+    ];
+
+    public function __construct(array $securityRoleHierarchyRoles)
+    {
+        $availableRoles = array_keys($securityRoleHierarchyRoles);
+
+        if ([] !== $missingTranslations = array_diff($availableRoles, self::ROLE_TRANSLATIONS)) {
+            throw new \InvalidArgumentException("Missing translations: " . print_r($missingTranslations, true));
+        }
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -23,6 +38,10 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
             ])
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
+            ->add('roles', ChoiceType::class, [
+                'multiple' => true,
+                'choices' => self::ROLE_TRANSLATIONS
+            ])
         ;
     }
 }

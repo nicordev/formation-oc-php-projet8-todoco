@@ -1,4 +1,5 @@
 .idea/
+.testingStuff/
 
 ###> symfony/framework-bundle ###
 /.env.local

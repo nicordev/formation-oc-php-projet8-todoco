@@ -21,9 +21,9 @@ class FeatureContext implements Context
      */
     private $currentPage;
 
-    //    public const URL = "http://127.0.0.1:8000"; // Not working with Symfony server: cURL error 60: SSL certificate problem: self signed certificate in certificate chain
+//    public const URL = "http://127.0.0.1:8000"; // Not working with Symfony server: cURL error 60: SSL certificate problem: self signed certificate in certificate chain
     public const URL = "http://todoco.local"; // Works with wamp virtual host
-    public const TEST_USERNAME = "bob";
+    public const TEST_USERNAME = "testuser";
     public const TEST_PASSWORD = "mdp";
 
     /**

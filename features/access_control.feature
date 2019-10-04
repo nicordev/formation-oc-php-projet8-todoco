@@ -25,7 +25,7 @@ Feature: Access control
   @login
   Scenario: Login
     Given I am on "/login"
-    When I fill in "username" with "bob"
+    When I fill in "username" with "testuser"
     And I fill in "password" with "mdp"
     And I press "Se connecter"
     Then I should be on "/"

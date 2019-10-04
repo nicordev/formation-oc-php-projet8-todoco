@@ -1,6 +1,5 @@
 <?php
 
-use App\Entity\User;
 use App\Kernel;
 use Behat\Behat\Context\Context;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
@@ -18,11 +17,35 @@ class FixtureContext extends KernelTestCase implements Context
     /**
      * @BeforeSuite
      */
-    public static function load()
+    public static function loadFixtures()
     {
         self::bootKernel();
-//        self::runCommand("hautelook:fixtures:load");
+//        $result = `php bin/console hautelook:fixtures:load`;
+//        self::runCommand("hautelook:fixtures:load"); // Not working
     }
+
+//    /**
+//     * @AfterSuite
+//     */
+//    public static function emptyDatabase() // Here I try to empty the tables manually but it does not work
+//    {
+//        $container = static::$kernel->getContainer();
+//        $orm = $container->get("doctrine");
+//        $manager = $orm->getManager();
+//        $connection = $manager->getConnection();
+//        //$connection->query('DELETE FROM task');
+//        // Next code comes from https://stackoverflow.com/questions/9686888/how-to-truncate-a-table-using-doctrine-2?answertab=votes#tab-top
+//        $connection->beginTransaction();
+//
+//        try {
+//            $connection->query('SET FOREIGN_KEY_CHECKS=0');
+//            $connection->query('DELETE FROM task');
+//            $connection->query('SET FOREIGN_KEY_CHECKS=1');
+//            $connection->commit();
+//        } catch (\Exception $e) {
+//            $connection->rollback();
+//        }
+//    }
 
     protected static function runCommand(string $command, array $args = []): void
     {

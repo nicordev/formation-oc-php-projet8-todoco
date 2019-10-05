@@ -25,6 +25,8 @@ class FeatureContext implements Context
     public const URL = "http://todoco.local"; // Works with wamp virtual host
     public const TEST_USERNAME = "testuser";
     public const TEST_PASSWORD = "mdp";
+    public const TEST_ADMIN_USERNAME = "testadmin";
+    public const TEST_ADMIN_PASSWORD = "mdp";
 
     /**
      * Initializes context.
@@ -43,13 +45,13 @@ class FeatureContext implements Context
     // Login
 
     /**
-     * @Given I am authenticated
+     * @Given I am authenticated as :user :password
      */
-    public function iAmAuthenticated()
+    public function iAmAuthenticatedAs($username, $password)
     {
         $this->iAmOn("/login");
-        $this->iFillInWith("username", self::TEST_USERNAME);
-        $this->iFillInWith("password", self::TEST_PASSWORD);
+        $this->iFillInWith("username", $username);
+        $this->iFillInWith("password", $password);
         $this->iPress("Se connecter");
     }
 

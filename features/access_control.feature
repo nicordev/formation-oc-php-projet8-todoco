@@ -4,18 +4,22 @@ Feature: Access control
   As an anonymous user
   I need to login first
 
+  @access
   Scenario: Check deny access to the homepage for anonymous user
     Given I am on "/"
     Then I should be on "/login"
 
+  @access
   Scenario: Check deny access to the task list for anonymous user
     Given I am on "/tasks"
     Then I should be on "/login"
 
+  @access
   Scenario: Check deny access to the task creation page for anonymous user
     Given I am on "/tasks/create"
     Then I should be on "/login"
 
+  @access
   Scenario: Check login page
     Given I am on "/login"
     Then I should see a "button" named "Se connecter"
@@ -33,7 +37,7 @@ Feature: Access control
 
   @logout
   Scenario: Logout
-    Given I am authenticated
+    Given I am authenticated as "testuser" "mdp"
     When I follow "Se déconnecter"
     Then I should be on "/login"
     And I should see a "button" named "Se connecter"

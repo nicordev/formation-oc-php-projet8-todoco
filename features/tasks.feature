@@ -43,15 +43,23 @@ Feature: Tasks
     And I fill in "task_content" with "New test task content"
     And I press "Ajouter"
     Then I should be on "/tasks"
-    And I should see the task "New test task title" with its content "New test task content"
+    And I should see a task "New test task title" with its content "New test task content"
+
+  @delete
+  Scenario: Delete an existing task
+    Given I am authenticated
+    And I am on "/tasks"
+    And I should see a task "test_task_0 title" with its content "test_task_0 content"
+    When I press "Supprimer"
+    Then I should not see a task "test_task_0 title"
 
   @edit
   Scenario: Edit an existing task
     Given I am authenticated
     And I am on "/tasks"
-    And I follow "test_task_0 title"
-    When I fill in "task_title" with "test_task_0 title - modified"
-    And I fill in "task_content" with "test_task_0 content - modified"
+    And I follow "test_task_1 title"
+    When I fill in "task_title" with "test_task_1 title - modified"
+    And I fill in "task_content" with "test_task_1 content - modified"
     And I press "Modifier"
     Then I should be on "/tasks"
-    And I should see the task "test_task_0 title - modified" with its content "test_task_0 content - modified"
+    And I should see a task "test_task_1 title - modified" with its content "test_task_1 content - modified"

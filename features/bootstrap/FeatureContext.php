@@ -76,7 +76,7 @@ class FeatureContext implements Context
     // Actions
 
     /**
-     * @Given I press :button
+     * @When I press :button
      */
     public function iPress($button)
     {
@@ -134,14 +134,23 @@ class FeatureContext implements Context
     }
 
     /**
-     * @Given I should see the task :title with its content :content
+     * @Given I should see a task :title with its content :content
      */
-    public function iShouldSeeTheTaskWithItsContent($title, $content)
+    public function iShouldSeeATaskWithItsContent($title, $content)
     {
         Assert::assertTrue($this->currentPage->hasLink($title));
         $title = $this->currentPage->find("named_exact", ["content", $title]);
         $content = $this->currentPage->find("named_exact", ["content", $content]);
         Assert::assertNotNull($title);
         Assert::assertNotNull($content);
+    }
+
+    /**
+     * @Then I should not see a task :title
+     */
+    public function iShouldNotSeeATask($title)
+    {
+        $title = $this->currentPage->find("named_exact", ["content", $title]);
+        Assert::assertNull($title);
     }
 }

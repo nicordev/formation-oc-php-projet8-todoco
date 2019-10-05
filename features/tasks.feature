@@ -75,5 +75,19 @@ Feature: Tasks
   Scenario: Try to delete a task created by another user
     Given I am authenticated as "testuser" "mdp"
     And I am on "/tasks"
-    And I follow "test_task_2 title - added by testadmin"
+    And I press "task-3-delete-btn"
+    Then the response status code should be "403"
+
+  @edit
+  Scenario: Try to edit a task created by an anonymous user
+    Given I am authenticated as "testuser" "mdp"
+    And I am on "/tasks"
+    And I follow "test_task_3 title - anonymous"
+    Then the response status code should be "403"
+
+  @delete
+  Scenario: Try to delete a task created by another user
+    Given I am authenticated as "testuser" "mdp"
+    And I am on "/tasks"
+    And I press "task-4-delete-btn"
     Then the response status code should be "403"

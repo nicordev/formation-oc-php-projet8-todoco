@@ -14,3 +14,7 @@ App\Entity\Task:
         content: 'test_task_2 content - added by testadmin'
         author: '@user1'
         createdAt: '<date_create()>'
+    task3:
+        title: 'test_task_3 title - anonymous'
+        content: 'test_task_3 content - anonymous'
+        createdAt: '<date_create()>'

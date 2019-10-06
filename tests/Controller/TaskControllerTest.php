@@ -3,7 +3,6 @@
 namespace App\Tests\Controller;
 
 
-use App\Tests\Helper\Debug;
 use App\Tests\Helper\Login;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -11,6 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class TaskControllerTest extends WebTestCase
 {
     use RefreshDatabaseTrait;
+
+    /*
+     * List
+     */
 
     public function testListAction_anonymous()
     {
@@ -33,6 +36,10 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertGreaterThan(0, $crawler->filter('div.task-card')->count());
     }
+
+    /*
+     * Create
+     */
 
     public function testCreateAction_anonymous()
     {
@@ -73,6 +80,10 @@ class TaskControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('div.task-card')->count());
         $this->assertEquals(1, $crawler->filter('a:contains("Test new task - title")')->count());
     }
+
+    /*
+     * Edit
+     */
 
     public function testEditAction_anonymous()
     {
@@ -161,7 +172,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('input[value="test_task_5 title - anonymous"]')->count());
         $this->assertEquals(1, $crawler->filter('textarea[name="task[content]"]:contains("test_task_5 content - anonymous")')->count());
 
-        // The user edit the task
+        // The admin edit the task
         $form = $crawler->selectButton("Modifier")->form();
         $form['task[title]'] = "test_task_5 title - anonymous - modified";
         $form['task[content]'] = "test_task_5 content - anonymous - modified";
@@ -246,7 +257,7 @@ class TaskControllerTest extends WebTestCase
         Login::login($client, Login::TEST_ADMIN_USERNAME, Login::TEST_ADMIN_PASSWORD);
         $crawler = $client->request("GET", "/tasks");
 
-        // The user delete a task he owns
+        // The admin delete an anonymous task
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
         $form = $crawler->selectButton("task-7-delete-btn")->form();

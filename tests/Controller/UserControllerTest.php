@@ -11,6 +11,10 @@ class UserControllerTest extends WebTestCase
 {
     use RefreshDatabaseTrait;
 
+    /*
+     * List
+     */
+
     public function testListAction_anonymous()
     {
         $client = static::createClient();
@@ -45,6 +49,10 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(1, $crawler->filter('h1:contains("Liste des utilisateurs")')->count());
     }
 
+    /*
+     * Create
+     */
+
     public function testCreateAction_anonymous()
     {
         $client = static::createClient();
@@ -60,7 +68,7 @@ class UserControllerTest extends WebTestCase
     {
         $client = static::createClient();
         Login::login($client, Login::TEST_USER_USERNAME, Login::TEST_USER_PASSWORD);
-        $crawler = $client->request("GET", "/users/create");
+        $client->request("GET", "/users/create");
 
         // The user should not reach the page
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
@@ -100,5 +108,70 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals("/users", $client->getRequest()->getRequestUri());
         $this->assertEquals(1, $crawler->filter('td:contains("Test add new user - name")')->count());
+    }
+
+    /*
+     * Edit
+     */
+
+    public function testEditAction_anonymous()
+    {
+        $client = static::createClient();
+        $client->request("GET", "/users/2/edit");
+
+        // The user should be redirected to the login page
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertEquals("/login", $client->getRequest()->getRequestUri());
+    }
+
+    public function testEditAction_authenticated()
+    {
+        $client = static::createClient();
+        $client->request("GET", "/users/2/edit");
+        Login::login($client, Login::TEST_USER_USERNAME, Login::TEST_USER_PASSWORD);
+        $client->request("GET", "/users/2/edit");
+
+        // The user should not reach the page
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+    }
+
+    public function testEditAction_admin()
+    {
+        $client = static::createClient();
+        $client->request("GET", "/users/2/edit");
+        Login::login($client, Login::TEST_ADMIN_USERNAME, Login::TEST_ADMIN_PASSWORD);
+        $crawler = $client->request("GET", "/users/2/edit");
+
+        // The admin should be on the user edition page
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/users/2/edit", $client->getRequest()->getRequestUri());
+        $this->assertEquals(1, $crawler->filter('input#user_username')->count());
+        $this->assertEquals(1, $crawler->filter('input[name="user[username]"]')->count());
+        $this->assertEquals(1, $crawler->filter('input#user_password_first')->count());
+        $this->assertEquals(1, $crawler->filter('input[name="user[password][first]"]')->count());
+        $this->assertEquals(1, $crawler->filter('input#user_password_second')->count());
+        $this->assertEquals(1, $crawler->filter('input[name="user[password][second]"]')->count());
+        $this->assertEquals(1, $crawler->filter('input#user_email')->count());
+        $this->assertEquals(1, $crawler->filter('input[name="user[email]"]')->count());
+        $this->assertEquals(1, $crawler->filter('select#user_roles')->count());
+        $this->assertEquals(1, $crawler->filter('select[name="user[roles][]"]')->count());
+        $this->assertEquals(1, $crawler->filter('button[type="submit"]:contains("Modifier")')->count());
+        $this->assertEquals("testuser2", $crawler->filter('input#user_username')->attr("value"));
+        $this->assertEquals("user2@test.com", $crawler->filter('input#user_email')->attr("value"));
+
+        // The admin edit the profile
+        $form = $crawler->selectButton("Modifier")->form();
+        $form['user[username]'] = "testuser2_modified";
+        $form['user[password][first]'] = "mdp";
+        $form['user[password][second]'] = "mdp";
+        $form['user[email]'] = "user2.modified@test.com";
+        $client->submit($form);
+
+        // The modified user should appear in the list
+        $crawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/users", $client->getRequest()->getRequestUri());
+        $this->assertEquals(1, $crawler->filter('td:contains("testuser2_modified")')->count());
     }
 }

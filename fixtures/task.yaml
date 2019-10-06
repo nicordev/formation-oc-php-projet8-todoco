@@ -1,32 +1,32 @@
 App\Entity\Task:
-    task0:
+    task1:
         title: 'test_task_1 title'
         content: 'test_task_1 content'
-        author: '@user0'
-        createdAt: '<date_create()>'
-    task1:
-        title: 'test_task_2 title'
-        content: 'test_task_2 content'
-        author: '@user0'
+        author: '@user1'
         createdAt: '<date_create()>'
     task2:
-        title: 'test_task_3 title - added by testadmin'
-        content: 'test_task_3 content - added by testadmin'
+        title: 'test_task_2 title'
+        content: 'test_task_2 content'
         author: '@user1'
         createdAt: '<date_create()>'
     task3:
+        title: 'test_task_3 title - added by testadmin'
+        content: 'test_task_3 content - added by testadmin'
+        author: '@user2'
+        createdAt: '<date_create()>'
+    task4:
         title: 'test_task_4 title - anonymous'
         content: 'test_task_4 content - anonymous'
         createdAt: '<date_create()>'
-    task4:
+    task5:
         title: 'test_task_5 title - anonymous'
         content: 'test_task_5 content - anonymous'
         createdAt: '<date_create()>'
-    task5:
+    task6:
         title: 'test_task_6 title - anonymous'
         content: 'test_task_6 content - anonymous'
         createdAt: '<date_create()>'
-    task6:
+    task7:
         title: 'test_task_7 title - anonymous'
         content: 'test_task_7 content - anonymous'
         createdAt: '<date_create()>'

@@ -15,6 +15,7 @@ class DefaultControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/');
+
         // The user should be redirected to the login page
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
@@ -24,8 +25,11 @@ class DefaultControllerTest extends WebTestCase
     public function testIndexAction_login()
     {
         $client = static::createClient();
-        Login::login($client, Login::TEST_USER_USERNAME, Login::TEST_USER_PASSWORD);
+        $crawler = Login::login($client, Login::TEST_USER_USERNAME, Login::TEST_USER_PASSWORD);
+
+        // The user should be on the home page, authenticated
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals("/", $client->getRequest()->getRequestUri());
+        $this->assertEquals(1, $crawler->filter('a:contains("Se déconnecter")')->count());
     }
 }

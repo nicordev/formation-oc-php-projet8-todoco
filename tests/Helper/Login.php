@@ -18,6 +18,7 @@ class Login
      * @param Client $client
      * @param string $login
      * @param string $password
+     * @return \Symfony\Component\DomCrawler\Crawler
      */
     public static function login(
         Client $client,
@@ -29,6 +30,7 @@ class Login
         $form["_username"] = $login;
         $form["_password"] = $password;
         $client->submit($form);
-        $client->followRedirect();
+
+        return $client->followRedirect();
     }
 }

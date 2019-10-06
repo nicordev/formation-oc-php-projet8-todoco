@@ -5,12 +5,12 @@ App\Entity\Task:
         author: '@user0'
         createdAt: '<date_create()>'
     task1:
-        title: 'test_task_2  title'
+        title: 'test_task_2 title'
         content: 'test_task_2 content'
         author: '@user0'
         createdAt: '<date_create()>'
     task2:
-        title: 'test_task_3  title - added by testadmin'
+        title: 'test_task_3 title - added by testadmin'
         content: 'test_task_3 content - added by testadmin'
         author: '@user1'
         createdAt: '<date_create()>'

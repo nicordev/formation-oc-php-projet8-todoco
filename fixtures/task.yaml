@@ -12,7 +12,7 @@ App\Entity\Task:
     task3:
         title: 'test_task_3 title - added by testadmin'
         content: 'test_task_3 content - added by testadmin'
-        author: '@user2'
+        author: '@user4'
         createdAt: '<date_create()>'
     task4:
         title: 'test_task_4 title - anonymous'

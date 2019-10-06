@@ -174,4 +174,44 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals("/users", $client->getRequest()->getRequestUri());
         $this->assertEquals(1, $crawler->filter('td:contains("testuser2_modified")')->count());
     }
+
+    /*
+     * Delete
+     */
+
+    public function testDeleteAction_anonymous()
+    {
+        $client = static::createClient();
+        $client->request("GET", "/users/3/delete");
+
+        // The user should be redirected to the login page
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertEquals("/login", $client->getRequest()->getRequestUri());
+    }
+
+    public function testDeleteAction_authenticated()
+    {
+        $client = static::createClient();
+        $client->request("GET", "/users/3/delete");
+        Login::login($client, Login::TEST_USER_USERNAME, Login::TEST_USER_PASSWORD);
+        $client->request("GET", "/users/3/delete");
+
+        // The user should not reach the page
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteAction_admin()
+    {
+        $client = static::createClient();
+        $client->request("GET", "/users/3/delete");
+        Login::login($client, Login::TEST_ADMIN_USERNAME, Login::TEST_ADMIN_PASSWORD);
+        $client->request("GET", "/users/3/delete");
+
+        // The deleted user should not appear in the list anymore
+        $crawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/users", $client->getRequest()->getRequestUri());
+        $this->assertEquals(0, $crawler->filter('td:contains("testuser3")')->count());
+    }
 }

@@ -4,7 +4,7 @@ Feature: Tasks
   As a fully authenticated user
   I need to see all created tasks on a page and manage my tasks
 
-  @navigate
+  @navigate @user
   Scenario: Check homepage
     Given I am authenticated as "testuser" "mdp"
     And I am on "/"
@@ -13,7 +13,7 @@ Feature: Tasks
     And I should see a "link" named "Consulter la liste des tâches à faire"
     And I should see a "link" named "Consulter la liste des tâches terminées"
 
-  @navigate
+  @navigate @user
   Scenario: Show the task list from the homepage
     Given I am authenticated as "testuser" "mdp"
     And I am on "/"
@@ -21,21 +21,21 @@ Feature: Tasks
     Then I should be on "/tasks"
     And I should see every tasks
 
-  @navigate
+  @navigate @user
   Scenario: Reach the task creation page from the homepage
     Given I am authenticated as "testuser" "mdp"
     And I am on "/"
     When I follow "Créer une nouvelle tâche"
     Then I should be on "/tasks/create"
 
-  @navigate
+  @navigate @user
   Scenario: Reach the task creation page from the task list
     Given I am authenticated as "testuser" "mdp"
     And I am on "/tasks"
     When I follow "Créer une tâche"
     Then I should be on "/tasks/create"
 
-  @create
+  @create @user
   Scenario: Create a new task
     Given I am authenticated as "testuser" "mdp"
     And I am on "/tasks/create"
@@ -45,49 +45,35 @@ Feature: Tasks
     Then I should be on "/tasks"
     And I should see a task "New test task title" with its content "New test task content"
 
-  @delete
+  @delete @user
   Scenario: Delete an existing task
     Given I am authenticated as "testuser" "mdp"
     And I am on "/tasks"
-    And I should see a task "test_task_0 title" with its content "test_task_0 content"
+    And I should see a task "test_task_1 title" with its content "test_task_1 content"
     When I press "Supprimer"
-    Then I should not see a task "test_task_0 title"
+    Then I should not see a task "test_task_1 title"
 
-  @edit
+  @edit @user
   Scenario: Edit an existing task
     Given I am authenticated as "testuser" "mdp"
     And I am on "/tasks"
-    And I follow "test_task_1 title"
-    When I fill in "task_title" with "test_task_1 title - modified"
-    And I fill in "task_content" with "test_task_1 content - modified"
+    And I follow "test_task_2 title"
+    When I fill in "task_title" with "test_task_2 title - modified"
+    And I fill in "task_content" with "test_task_2 content - modified"
     And I press "Modifier"
     Then I should be on "/tasks"
-    And I should see a task "test_task_1 title - modified" with its content "test_task_1 content - modified"
+    And I should see a task "test_task_2 title - modified" with its content "test_task_2 content - modified"
 
-  @edit
+  @edit @user
   Scenario: Try to edit a task created by another user
     Given I am authenticated as "testuser" "mdp"
     And I am on "/tasks"
-    And I follow "test_task_2 title - added by testadmin"
+    And I follow "test_task_3 title - added by testadmin"
     Then the response status code should be "403"
 
-  @delete
+  @delete @user
   Scenario: Try to delete a task created by another user
     Given I am authenticated as "testuser" "mdp"
     And I am on "/tasks"
     And I press "task-3-delete-btn"
-    Then the response status code should be "403"
-
-  @edit
-  Scenario: Try to edit a task created by an anonymous user
-    Given I am authenticated as "testuser" "mdp"
-    And I am on "/tasks"
-    And I follow "test_task_3 title - anonymous"
-    Then the response status code should be "403"
-
-  @delete
-  Scenario: Try to delete a task created by another user
-    Given I am authenticated as "testuser" "mdp"
-    And I am on "/tasks"
-    And I press "task-4-delete-btn"
     Then the response status code should be "403"

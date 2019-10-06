@@ -2,7 +2,6 @@
 
 namespace App\Helper;
 
-
 use App\Entity\User;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 

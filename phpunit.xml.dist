@@ -16,14 +16,20 @@
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="Functional Test Suite">
+            <directory>tests/functional</directory>
+        </testsuite>
+        <testsuite name="Unit Test Suite">
+            <directory>tests/unit</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
             <directory>src</directory>
+            <exclude>
+                <file>src/Kernel.php</file>
+            </exclude>
         </whitelist>
     </filter>
 

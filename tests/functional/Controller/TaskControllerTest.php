@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\functional\Controller;
 
 
 use App\Tests\Helper\Login;

@@ -125,7 +125,7 @@ class TaskControllerTest extends WebTestCase
         // The user choose a task he does not owns to edit
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
-        $link = $crawler->selectLink("test_task_3 title")->link();
+        $link = $crawler->selectLink("test_task_3 title - added by testadmin")->link();
         $client->click($link);
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
@@ -143,6 +143,41 @@ class TaskControllerTest extends WebTestCase
         $client->click($link);
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
+
+    public function testEditAction_admin_anonymous()
+    {
+        $client = static::createClient();
+        Login::login($client, Login::TEST_ADMIN_USERNAME, Login::TEST_ADMIN_PASSWORD);
+        $crawler = $client->request("GET", "/tasks");
+
+        // The admin choose an anonymous task to edit
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
+        $link = $crawler->selectLink("test_task_5 title - anonymous")->link();
+        $crawler = $client->click($link);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/tasks/5/edit", $client->getRequest()->getRequestUri());
+        $this->assertEquals(1, $crawler->filter('input[name="task[title]"]')->count());
+        $this->assertEquals(1, $crawler->filter('input[value="test_task_5 title - anonymous"]')->count());
+        $this->assertEquals(1, $crawler->filter('textarea[name="task[content]"]:contains("test_task_5 content - anonymous")')->count());
+
+        // The user edit the task
+        $form = $crawler->selectButton("Modifier")->form();
+        $form['task[title]'] = "test_task_5 title - anonymous - modified";
+        $form['task[content]'] = "test_task_5 content - anonymous - modified";
+        $client->submit($form);
+
+        // The modified task should appear in the list
+        $crawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
+        $this->assertGreaterThan(0, $crawler->filter('div.task-card')->count());
+        $this->assertEquals(1, $crawler->filter('a:contains("test_task_5 title - anonymous - modified")')->count());
+    }
+
+    /*
+     * Delete
+     */
 
     public function testDeleteAction_anonymous()
     {
@@ -184,6 +219,7 @@ class TaskControllerTest extends WebTestCase
         // The user tries to delete a task he does not owns
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
+        $this->assertEquals(1, $crawler->filter('a:contains("test_task_3 title - added by testadmin")')->count());
         $form = $crawler->selectButton("task-3-delete-btn")->form();
         $client->submit($form);
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
@@ -198,8 +234,29 @@ class TaskControllerTest extends WebTestCase
         // The user tries to delete an anonymous task
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
+        $this->assertEquals(1, $crawler->filter('a:contains("test_task_4 title - anonymous")')->count());
         $form = $crawler->selectButton("task-4-delete-btn")->form();
         $client->submit($form);
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
+    }
+
+    public function testDeleteAction_admin_anonymous()
+    {
+        $client = static::createClient();
+        Login::login($client, Login::TEST_ADMIN_USERNAME, Login::TEST_ADMIN_PASSWORD);
+        $crawler = $client->request("GET", "/tasks");
+
+        // The user delete a task he owns
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
+        $form = $crawler->selectButton("task-7-delete-btn")->form();
+        $client->submit($form);
+
+        // The deleted task should not appear in the list anymore
+        $crawler = $client->followRedirect();
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals("/tasks", $client->getRequest()->getRequestUri());
+        $this->assertGreaterThan(0, $crawler->filter('div.task-card')->count());
+        $this->assertEquals(0, $crawler->filter('a:contains("test_task_7 title - anonymous")')->count());
     }
 }

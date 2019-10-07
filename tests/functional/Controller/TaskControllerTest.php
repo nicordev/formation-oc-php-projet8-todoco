@@ -11,6 +11,34 @@ class TaskControllerTest extends WebTestCase
 {
     use RefreshDatabaseTrait;
 
+    public function testToggle_anonymous()
+    {
+        $client = static::createClient();
+        $client->request("GET", "/tasks/1/toggle");
+
+        // The user should be redirected to the login page
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertEquals("/login", $client->getRequest()->getRequestUri());
+    }
+
+    public function testToggle_authenticated()
+    {
+        $client = static::createClient();
+        Login::login($client, Login::TEST_USER_USERNAME, Login::TEST_USER_PASSWORD);
+        $crawler = $client->request("GET", "/tasks");
+
+        // The user should see the list
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(0, $crawler->filter('div.task-card')->count());
+
+        // The user click a link to toggle a task
+        $form = $crawler->selectButton("Marquer comme faite")->form();
+        $client->submit($form);
+        $crawler = $client->followRedirect();
+        $this->assertGreaterThan(0, $crawler->filter("span.glyphicon-ok")->count());
+    }
+
     /*
      * List
      */

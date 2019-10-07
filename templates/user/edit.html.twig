@@ -12,3 +12,21 @@
         {{ form_end(form) }}
     </div>
 {% endblock %}
+
+{% block more_scripts %}
+    <script>
+        /**
+         * Avoid the role selector to have more than one selected role if the user to edit is admin
+         */
+        function avoidMoreThanOneRole() {
+            let adminRoleElement = document.querySelector('option[value="ROLE_ADMIN"]');
+
+            if (adminRoleElement.selected) {
+                let userRoleElement = document.querySelector('option[value="ROLE_USER"]');
+                userRoleElement.removeAttribute("selected");
+            }
+        }
+
+        avoidMoreThanOneRole();
+    </script>
+{% endblock %}

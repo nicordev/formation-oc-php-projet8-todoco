@@ -2,7 +2,6 @@
 
 namespace App\Tests\functional\Controller;
 
-
 use App\Tests\Helper\Login;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

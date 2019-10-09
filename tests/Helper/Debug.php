@@ -2,7 +2,6 @@
 
 namespace App\Tests\Helper;
 
-
 use Symfony\Bundle\FrameworkBundle\Client;
 
 class Debug

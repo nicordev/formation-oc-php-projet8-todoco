@@ -2,7 +2,6 @@
 
 namespace App\Tests\unit\Form;
 
-
 use App\Form\UserType;
 use PHPUnit\Framework\TestCase;
 

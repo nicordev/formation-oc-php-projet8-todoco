@@ -2,7 +2,6 @@
 
 namespace App\Tests\unit\Security;
 
-
 use App\Entity\Task;
 use App\Entity\User;
 use App\Security\TaskVoter;
@@ -36,7 +35,7 @@ class TaskVoterTest extends TestCase
         $token->expects($this->once())
             ->method("getUser")
             ->willReturn(
-                (new User)->setRoles(["ROLE_ADMIN"])
+                (new User())->setRoles(["ROLE_ADMIN"])
             );
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker->method("isGranted")
@@ -51,7 +50,7 @@ class TaskVoterTest extends TestCase
 
     public function testVote_delete_author()
     {
-        $author = (new User)->setRoles(["ROLE_USER"])
+        $author = (new User())->setRoles(["ROLE_USER"])
             ->setUsername("test_author");
         $token = $this->createMock(TokenInterface::class);
         $token->expects($this->once())
@@ -70,7 +69,7 @@ class TaskVoterTest extends TestCase
 
     public function testVote_delete_notAuthor()
     {
-        $user = (new User)->setRoles(["ROLE_USER"])
+        $user = (new User())->setRoles(["ROLE_USER"])
             ->setUsername("test_user");
         $token = $this->createMock(TokenInterface::class);
         $token->expects($this->once())
@@ -80,7 +79,7 @@ class TaskVoterTest extends TestCase
         $authorizationChecker->method("isGranted")
             ->with("ROLE_ADMIN")
             ->willReturn(false);
-        $task = (new Task())->setAuthor((new User)->setUsername("test_author"));
+        $task = (new Task())->setAuthor((new User())->setUsername("test_author"));
         $voter = new TaskVoter($authorizationChecker);
         $result = $voter->vote($token, $task, [TaskVoter::DELETE]);
 
@@ -110,7 +109,7 @@ class TaskVoterTest extends TestCase
         $token->expects($this->once())
             ->method("getUser")
             ->willReturn(
-                (new User)->setRoles(["ROLE_ADMIN"])
+                (new User())->setRoles(["ROLE_ADMIN"])
             );
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker->method("isGranted")
@@ -125,7 +124,7 @@ class TaskVoterTest extends TestCase
 
     public function testVote_edit_author()
     {
-        $author = (new User)->setRoles(["ROLE_USER"])
+        $author = (new User())->setRoles(["ROLE_USER"])
             ->setUsername("test_author");
         $token = $this->createMock(TokenInterface::class);
         $token->expects($this->once())
@@ -144,7 +143,7 @@ class TaskVoterTest extends TestCase
 
     public function testVote_edit_notAuthor()
     {
-        $user = (new User)->setRoles(["ROLE_USER"])
+        $user = (new User())->setRoles(["ROLE_USER"])
             ->setUsername("test_user");
         $token = $this->createMock(TokenInterface::class);
         $token->expects($this->once())
@@ -154,7 +153,7 @@ class TaskVoterTest extends TestCase
         $authorizationChecker->method("isGranted")
             ->with("ROLE_ADMIN")
             ->willReturn(false);
-        $task = (new Task())->setAuthor((new User)->setUsername("test_author"));
+        $task = (new Task())->setAuthor((new User())->setUsername("test_author"));
         $voter = new TaskVoter($authorizationChecker);
         $result = $voter->vote($token, $task, [TaskVoter::EDIT]);
 

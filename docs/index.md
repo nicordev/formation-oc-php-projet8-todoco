@@ -4,4 +4,4 @@
 
 * [Authentication](authentication.md)
 * [Contribution](contribute.md)
-* [Performance and code quality](audit.pdf)
+* [Performance and code quality](audit.md)

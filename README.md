@@ -31,6 +31,8 @@ If you want to generate a coverage report, add `--coverage-html nameOfTheDestina
 
 Some documentation is located inside the `/docs` folder.
 
+Also a static website dedicated to the documentation [is available here](https://nicordev.github.io/formation-oc-php-projet8-todoco/).
+
 ## How to contribute
 
 Everything is explained in the `contribute.md` file located in the `/docs` folder.

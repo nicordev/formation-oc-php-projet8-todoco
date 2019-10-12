@@ -13,6 +13,11 @@ class SecurityController extends Controller
      */
     public function loginAction(Request $request)
     {
+        if ($this->getUser()) {
+            $this->addFlash("notice", "Vous êtes déjà connecté.");
+            $this->$this->redirectToRoute("homepage");
+        }
+
         $authenticationUtils = $this->get('security.authentication_utils');
 
         $error = $authenticationUtils->getLastAuthenticationError();

@@ -1,0 +1,25 @@
+App\Entity\User:
+    user1:
+        username: "testuser"
+        password: '<hashPassword("mdp")>' # "$2y$10$kgc74NN6qwxFVCsBR.fYS.bIv3dwjc8Zhwyy/KLK8tqE6rY/nT07W"
+        email: "user@test.com"
+        roles:
+            - 'ROLE_USER'
+    user2:
+        username: "testuser2"
+        password: '<hashPassword("mdp")>' # "$2y$10$kgc74NN6qwxFVCsBR.fYS.bIv3dwjc8Zhwyy/KLK8tqE6rY/nT07W"
+        email: "user2@test.com"
+        roles:
+            - 'ROLE_USER'
+    user3:
+        username: "testuser3"
+        password: '<hashPassword("mdp")>' # "$2y$10$kgc74NN6qwxFVCsBR.fYS.bIv3dwjc8Zhwyy/KLK8tqE6rY/nT07W"
+        email: "user3@test.com"
+        roles:
+            - 'ROLE_USER'
+    user4:
+        username: "testadmin"
+        password: '<hashPassword("mdp")>' # "$2y$10$kgc74NN6qwxFVCsBR.fYS.bIv3dwjc8Zhwyy/KLK8tqE6rY/nT07W"
+        email: "admin@test.com"
+        roles:
+            - 'ROLE_ADMIN'

@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends Controller
 {
+    public const ROUTE_USER_LIST = "user_list";
+
     /**
      * @Route("/users", name="user_list")
      */
@@ -39,7 +41,7 @@ class UserController extends Controller
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute(self::ROUTE_USER_LIST);
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
@@ -72,7 +74,7 @@ class UserController extends Controller
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute(self::ROUTE_USER_LIST);
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
@@ -88,6 +90,6 @@ class UserController extends Controller
 
         $this->addFlash('success', "L'utilisateur a bien été supprimé");
 
-        return $this->redirectToRoute('user_list');
+        return $this->redirectToRoute(self::ROUTE_USER_LIST);
     }
 }

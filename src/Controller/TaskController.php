@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TaskController extends Controller
 {
+    public const ROUTE_TASK_LIST = "task_list";
+
     /**
      * @Route("/tasks", name="task_list")
      */
@@ -39,7 +41,7 @@ class TaskController extends Controller
 
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute(self::ROUTE_TASK_LIST);
         }
 
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
@@ -61,7 +63,7 @@ class TaskController extends Controller
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute(self::ROUTE_TASK_LIST);
         }
 
         return $this->render('task/edit.html.twig', [
@@ -80,7 +82,7 @@ class TaskController extends Controller
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute(self::ROUTE_TASK_LIST);
     }
 
     /**
@@ -96,6 +98,6 @@ class TaskController extends Controller
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
 
-        return $this->redirectToRoute('task_list');
+        return $this->redirectToRoute(self::ROUTE_TASK_LIST);
     }
 }

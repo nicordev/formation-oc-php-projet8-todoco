@@ -1,0 +1,7 @@
+App\Entity\User:
+    admin:
+        username: "theAdmin"
+        password: '<hashPassword("mdp")>' # "$2y$10$kgc74NN6qwxFVCsBR.fYS.bIv3dwjc8Zhwyy/KLK8tqE6rY/nT07W"
+        email: "admin@todoco.com"
+        roles:
+            - 'ROLE_ADMIN'

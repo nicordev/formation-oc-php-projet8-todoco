@@ -18,10 +18,15 @@ Handle your daily tasks with ease thanks to this website.
     ###< doctrine/doctrine-bundle ###
     ```
 1. Run `php bin/console doctrine:migrations:migrate -n` to create the right tables (note the `-n` or `--no-interaction` which avoid command prompts, thus allowing you to use this command inside an automatic script)
+1. Optional: Run `php bin/console hautelook:fixtures:load --env=dev` to load an admin user in the database with the following credentials:
+    ```
+    Username: theAdmin
+    Password: mdp
+    ``` 
 
 ## Test suite
 
-The application comes with a serie of unit and functional tests written with PhpUnit.
+The application comes with a series of unit and functional tests written with PhpUnit.
 
 To execute these tests, first create a file called `.env.test.local` at the root of the project and put your test database credentials in it as you did in the `.env.local` file, then execute `php bin/console phpunit`.
 

@@ -25,6 +25,8 @@ For instance, it highlighted a badly written class name.
 
 We used Sonar Cloud for the code review. It highlights security vulnerabilities, bugs and code smells.
 
+![SonarCloud dashboard](image/sonarcloud_dashboard.png)
+
 ### Conclusion
 
 Thanks to these three tools, we were able to respect PSR 12 coding standard as well as avoiding errors and security vulnerabilities.
@@ -33,4 +35,8 @@ Thanks to these three tools, we were able to respect PSR 12 coding standard as w
 
 We used BlackFire to study application performance. This tool can analyze memory consumption as well as the duration of each function called by our application, allowing us to see where we can make performance improvements.
 
+![BlackFire dashboard](image/blackfire_dashboard.png)
+
 Our application being rather simple, it runs fast without any improvements. Still, we saw through our BlackFire profiling that a lot of calls were executed to load classes. These calls could be avoided if we generate cached files for the composer autoloader by executing the following command: `composer dump-autoload --optimize` which convert PSR-0/4 autoloading to classmap to get a faster autoloader.
+
+![Composer optimize](image/comparison.png)

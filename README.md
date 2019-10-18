@@ -1,5 +1,7 @@
 # ToDoList
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=nicordev_formation-oc-php-projet8-todoco&metric=alert_status)](https://sonarcloud.io/dashboard?id=nicordev_formation-oc-php-projet8-todoco)
+
 Handle your daily tasks with ease thanks to this website.
 
 ## Installation

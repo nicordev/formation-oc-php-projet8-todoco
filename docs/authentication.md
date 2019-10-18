@@ -24,7 +24,7 @@ A class implementing the `Symfony\Component\Security\Core\User\UserInterface` in
 
 ### Configuration
 
-The `security.yaml` file contains every parameter linked to the authentification.
+The `security.yaml` file contains every parameter linked to the authentication.
 
 Here is the one from the application with some useful comments:
 

@@ -2,6 +2,8 @@
 
 This document explains how we handled code quality and how we measure the performance of the ToDo List application.
 
+[PDF version here](audit.pdf)
+
 ## Code quality
 
 In order to maintain good quality code during the development of the application, we used the following tools:

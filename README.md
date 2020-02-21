@@ -30,7 +30,7 @@ Handle your daily tasks with ease thanks to this website.
 
 The application comes with a series of unit and functional tests written with PhpUnit.
 
-To execute these tests, first create a file called `.env.test.local` at the root of the project and put your test database credentials in it as you did in the `.env.local` file, then execute `php bin/console phpunit`.
+To execute these tests, first create a file called `.env.test.local` at the root of the project and put your test database credentials in it as you did in the `.env.local` file, then execute `php bin/phpunit`.
 
 If you want to generate a coverage report, add `--coverage-html nameOfTheDestinationFolderHere` to the previous command.
 
